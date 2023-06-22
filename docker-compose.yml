@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis
+  golang:
+    container_name: golang
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
