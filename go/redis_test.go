@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestAdd(t *testing.T) {
-	err := add("key", "value")
+	err := Add("key", "value")
 	if err != nil {
 		t.Errorf("Catch err: [%v]", err)
 	}
@@ -11,7 +11,7 @@ func TestAdd(t *testing.T) {
 
 func TestGet(t *testing.T) {
 
-	value, err := get("key")
+	value, err := Get("key")
 	if err != nil {
 		t.Errorf("Catch err: [%v]", err)
 	}
