@@ -17,6 +17,7 @@ import (
 type Message struct {
 	M_type  string            `json:"type"`
 	Msg     string            `json:"msg"`
+	Tell    map[string]string `json:"tell"`
 	History map[string]string `json:"history"`
 }
 
@@ -185,7 +186,15 @@ func Websocket() {
 						if err := Add(key, recive_msg.Msg); err != nil {
 							fmt.Println(err)
 						}
-						chat.Multicast(user, msg, op)
+
+						send_msg.M_type = "tell"
+						send_msg.Tell = map[string]string{key: recive_msg.Msg}
+
+						send_json, err := json.Marshal(&send_msg)
+						if err != nil {
+							fmt.Println(err)
+						}
+						chat.Multicast(user, send_json, op)
 					}
 				case "rename":
 					{
