@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"regexp"
 	"sort"
 	"strconv"
 	"sync"
@@ -206,7 +207,7 @@ func Websocket() {
 							user.sendErr("need Name", op)
 							break
 						}
-						pattern := "*:" + user.name + ":*"
+						pattern := "*:" + regexp.QuoteMeta(user.name) + ":*"
 						keys, _ := Keys(pattern)
 
 						values := make(map[string]string)

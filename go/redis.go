@@ -21,7 +21,7 @@ func InitRedis() {
 }
 
 func Add(key string, value string) error {
-	err := rdb.Set(ctx, key, value, 20*time.Second).Err()
+	err := rdb.Set(ctx, key, value, 30*time.Second).Err()
 	if err != nil {
 		return fmt.Errorf("add failed: %w", err)
 	}
