@@ -26,6 +26,7 @@ type User struct {
 	conn net.Conn
 	uid  uint64
 	name string
+	init bool
 }
 
 func (u *User) send(msg []byte, op ws.OpCode) {
@@ -76,7 +77,7 @@ func (c *Chat) Register(conn net.Conn) *User {
 	c.mu.Unlock()
 
 	fmt.Println("new Client", user.uid)
-	fmt.Println(c.users)
+	fmt.Println("user", c.users)
 	return user
 }
 
@@ -158,9 +159,29 @@ func Websocket() {
 				if err := json.Unmarshal(msg, &recive_msg); err != nil {
 					fmt.Println("json Unmarshal err", err)
 				}
-				fmt.Printf("msg %+v\n", recive_msg)
+
+				if recive_msg.M_type != "init" && !user.init {
+					return
+				}
 
 				switch recive_msg.M_type {
+				case "init":
+					{
+						if recive_msg.Msg != "request" {
+							break
+						}
+						user.init = true
+
+						send_msg.M_type = "init"
+						send_msg.Msg = "success"
+
+						send_json, err := json.Marshal(&send_msg)
+						if err != nil {
+							fmt.Println(err)
+						}
+
+						user.send(send_json, op)
+					}
 				case "ping":
 					{
 						send_msg.M_type = "ping"
@@ -217,7 +238,6 @@ func Websocket() {
 							values[v] = value
 						}
 
-						fmt.Println(keys)
 						send_msg.M_type = "get"
 						send_msg.History = values
 
